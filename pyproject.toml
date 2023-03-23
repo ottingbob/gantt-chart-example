@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "gantt-chart-example"
+version = "0.1.0"
+description = ""
+authors = ["baw <baw@hogwild.dev>"]
+readme = "README.md"
+packages = [{include = "app/internal"}]
+
+[tool.poetry.scripts]
+serve = "app.internal.__main__:main"
+# Run like so:
+# python -m streamlit run app/internal/__main__.py --server.headless true
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "^1.20.0"
+streamlit-aggrid = "^0.3.4.post3"
+plotly = "^5.13.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.12.0"
+isort = "^5.11.4"
+python-lsp-server = {extras = ["all"], version = "^1.7.1"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+		\.eggs
+	|	\.git
+	|	\.hg
+	|	\.mypy_cache
+	|	\.tox
+	|	\.venv
+	| _build
+	| build
+	| dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+src_paths = ["app"]
+multi_line_output = 3
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
