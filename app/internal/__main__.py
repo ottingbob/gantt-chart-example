@@ -68,7 +68,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<p class="font">Upload your project plan file and generate a Gantt chart instantly</p>'
+    '<p class="font">Upload your project plan file and generate a Gantt chart instantly</p>',
+    unsafe_allow_html=True,
 )
 
 # Add a template screenshot as an example
@@ -79,12 +80,12 @@ st.subheader("Step 1: Download the project plan template")
 
 
 # Allow users to download the template
-@st.cache
+@st.cache_data
 def convert_df(df):
     return df.to_csv().encode("utf-8")
 
 
-df = pd.read_csv(r"...\template.csv")
+df = pd.read_csv(r"./template.csv")
 csv = convert_df(df)
 st.download_button(
     label="Download Template",
@@ -100,8 +101,8 @@ uploaded_file = st.file_uploader(
 )
 if uploaded_file is not None:
     tasks = pd.read_csv(uploaded_file)
-    tasks["start"] = tasks["start"].astype("datetime64")
-    tasks["finish"] = tasks["finish"].astype("datetime64")
+    tasks["Start"] = tasks["Start"].astype("datetime64")
+    tasks["Finish"] = tasks["Finish"].astype("datetime64")
 
     grid_response = AgGrid(tasks, editable=True, height=300, width="100%")
     updated = grid_response["data"]
@@ -132,7 +133,7 @@ if uploaded_file is not None:
             xaxis=dict(
                 tickfont_size=15,
                 tickangle=270,
-                rangesliver_visible=True,
+                rangeslider_visible=True,
                 # place the tick labels on the top of the chart
                 side="top",
                 showgrid=True,
@@ -159,7 +160,7 @@ if uploaded_file is not None:
 
         st.download_button(
             label="Export to HTML",
-            data=(lambda: download_chart),
+            data=download_chart(),
             file_name="Gantt.html",
             mime="text/html",
         )
@@ -173,8 +174,9 @@ else:
 def main():
     filename = os.getcwd() + os.sep + __name__.replace(".", os.sep) + ".py"
     args = ["streamlit", "run", filename, "--server.headless", "true"]
-    process = subprocess.Popen(args)
-    print(process)
+    # process = subprocess.Popen(args)
+    # print(process)
+    print(args)
 
 
 if __name__ == "__main__":
